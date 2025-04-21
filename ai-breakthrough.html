@@ -1,0 +1,125 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>科技巨頭推出全新AI突破 - 每日快訊</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #0066cc;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 15px;
+      background-color: white;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .article h1 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .article .date {
+      font-size: 14px;
+      color: #999;
+      margin-bottom: 20px;
+    }
+    .article p {
+      font-size: 16px;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 20px;
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+    footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>每日快訊</h1>
+    <p>你的最新新聞來源</p>
+  </header>
+  <div class="container">
+    <div class="article">
+      <h1>科技巨頭推出全新AI突破</h1>
+      <p class="date">發布日期：2025年4月21日</p>
+      <p>今日，一家全球領先的科技公司宣布推出了一項革命性的AI技術，這項技術被稱為「智能核心 3.0」。該系統以其超強的學習能力和跨行業應用潛力，震撼了科技界，預計將改變從醫療到金融等多個領域的運作方式。</p>
+      <p>據公司首席技術官介紹，「智能核心 3.0」能夠在幾秒內處理數十億條數據，並根據環境動態調整其算法。這意味著它可以在醫療領域用於快速診斷疾病，例如通過分析患者的醫療影像，精確識別潛在的癌症病灶，準確率高達98%。</p>
+      <p>在金融領域，這項AI技術已經被應用於實時欺詐檢測。傳統的欺詐檢測系統通常需要數小時才能發現異常交易，但「智能核心 3.0」可以在交易發生的瞬間完成分析，將誤報率降低到1%以下。這不僅提升了銀行的安全性，也讓客戶的資金更加安全。</p>
+      <p>此外，這項技術還被用於教育領域。一所美國大學已經開始試用這套系統，通過分析學生的學習數據，為每位學生量身定制學習計劃。初步試驗顯示，學生的成績平均提高了15%，特別是在數學和科學科目上表現尤為突出。</p>
+      <p>儘管這項技術前景廣闊，但也引發了一些擔憂。專家指出，如此強大的AI可能會帶來隱私問題，甚至影響就業市場，因為許多重複性工作可能被自動化取代。公司表示，他們已經採取嚴格的隱私保護措施，並計劃與政府合作，確保技術的負責任使用。</p>
+      <p>「智能核心 3.0」的推出標誌著AI技術的新時代。隨著這項技術的普及，我們的生活和工作方式可能會迎來翻天覆地的變化。未來的幾年，這項技術將如何影響世界，值得我們密切關注。</p>
+      <a href="index.html" class="back-link">返回首頁</a>
+    </div>
+  </div>
+  <footer>
+    <p>© 2025 每日快訊。版權所有。</p>
+  </footer>
+</body>
+</html>

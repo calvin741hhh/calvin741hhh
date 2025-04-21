@@ -1,0 +1,124 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>運動明星打破世界紀錄 - 每日快訊</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #0066cc;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 15px;
+      background-color: white;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .article h1 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .article .date {
+      font-size: 14px;
+      color: #999;
+      margin-bottom: 20px;
+    }
+    .article p {
+      font-size: 16px;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 20px;
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+    footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>每日快訊</h1>
+    <p>你的最新新聞來源</p>
+  </header>
+  <div class="container">
+    <div class="article">
+      <h1>運動明星打破世界紀錄</h1>
+      <p class="date">發布日期：2025年4月21日</p>
+      <p>今天，牙買加短跑明星艾莉莎·湯普森在國際田聯世界錦標賽上創造了歷史，她以9.52秒的成績打破了女子100米短跑的世界紀錄，震撼了全球體育界。這一紀錄比之前的紀錄快了0.03秒，成為本世紀最令人矚目的運動成就之一。</p>
+      <p>比賽在倫敦奧林匹克體育場舉行，當天現場氣氛熱烈，超過5萬名觀眾見證了這一歷史時刻。湯普森從起跑就展現了驚人的爆發力，幾乎全程領先，最終以絕對優勢衝過終點線。賽後，她激動地表示：「這是我職業生涯中最重要的一刻，我為我的團隊和國家感到驕傲。」</p>
+      <p>湯普森的成功並非偶然。她從小就展現出驚人的運動天賦，並在過去五年中穩步提升成績。她的教練透露，湯普森每天訓練超過6小時，專注於提高起跑速度和後程耐力。此外，她還採用了最新的運動科學技術，例如通過數據分析優化步伐和呼吸節奏。</p>
+      <p>這項新紀錄也讓湯普森成為首位連續三年蟬聯世界錦標賽100米冠軍的女選手。她的表現不僅激勵了年輕運動員，也讓人們重新審視女子短跑的潛力極限。國際田聯主席表示：「湯普森的表現重新定義了速度，她是當之無愧的田徑女王。」</p>
+      <p>隨著這一紀錄的誕生，湯普森已經將目光投向了下一目標——在2025年夏季奧運會上衛冕冠軍。她說：「打破紀錄只是開始，我希望在奧運會上創造更多奇蹟。」無論未來如何，今天的成就已經讓她成為體育史上不可磨滅的一部分。</p>
+      <a href="index.html" class="back-link">返回首頁</a>
+    </div>
+  </div>
+  <footer>
+    <p>© 2025 每日快訊。版權所有。</p>
+  </footer>
+</body>
+</html>
